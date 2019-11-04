@@ -4,14 +4,14 @@
 ; This is an attempt to capture all of the useful addresses typically used when
 ; accessing NES hardware.  Since there are memory addresses that overlap by
 ; number, but are in separate banks of RAM, each section below clarifies which
-; memory bank the address is in.  (In the section headers.)  Most values used 
-; in each of these addresses are actually bit masks, so every individual bit 
-; has been separately described.  
-; 
-; In some cases an entire register is read only [R], write only [W], or both 
-; readable and writable [RW].  In other cases, individual bits in a register 
+; memory bank the address is in.  (In the section headers.)  Most values used
+; in each of these addresses are actually bit masks, so every individual bit
+; has been separately described.
+;
+; In some cases an entire register is read only [R], write only [W], or both
+; readable and writable [RW].  In other cases, individual bits in a register
 ; have different access rules.  The same symbols are used to indicate that.
-; Some values must be written more than once to properly set the value.  In 
+; Some values must be written more than once to properly set the value.  In
 ; this case the symbol [W2] will be used.
 ; -------------------------------------------------------------------------------------------------
 
@@ -36,8 +36,8 @@
                                        ;   S = Sprite pattern table select
                                        ;   I = Increment mode
                                        ;   N = Nametable select
-									   ; Note: N is effectively the 9th (high) bit
-									   ;   of the PPUSCROLL value.
+                                       ; Note: N is effectively the 9th (high) bit
+                                       ;   of the PPUSCROLL value.
 
 .alias PPU_MASK              $2001     ; PPU Mask [W]
                                        ; Bits: BGRs bCcG
@@ -198,7 +198,7 @@
                                        ;   T = Enable Triangle [RW]
                                        ;   2 = Square 2 Enable [RW]
                                        ;   1 = Square 1 Enable [RW]
-                                       
+
 .alias SND_FRAME_COUNTER     $4017     ; Sount Frame Counter [W]
                                        ; Bits: MI-- ----
                                        ;   M = Mode
@@ -214,31 +214,31 @@
                                        ; Bits: ---- -EEC
                                        ;   - = Not used
                                        ;   E = Expansion port latch
-                                       ;   C = Controller port latch  
-                                       ; Notes: 
+                                       ;   C = Controller port latch
+                                       ; Notes:
                                        ;   Write 1 to latch, then 0 to enable reading.
                                        ;   Use this to latch regardless of which joypad you are reading.
 
 .alias JOYPAD1               $4016     ; Joypad 1 Data [R]
                                        ; Bits: ---- ---D
                                        ;   D = Input data bit
-                                       ; Notes: 
-                                       ;   Read once for each button.  
-                                       ;   Buttons in this order: 
-                                       ;     A, B, Select, Start, Up, Down, Left, Right
-                                       ;     0: Pressed
-                                       ;     1: Not pressed                                       
-                                       
-.alias JOYPAD2               $4017     ; Joypad 2 Data [R]
-                                       ; Bits: ---- ---D
-                                       ;   D = Input data bit
-                                       ; Notes: 
-                                       ;   Read once for each button.  
-                                       ;   Buttons in this order: 
+                                       ; Notes:
+                                       ;   Read once for each button.
+                                       ;   Buttons in this order:
                                        ;     A, B, Select, Start, Up, Down, Left, Right
                                        ;     0: Pressed
                                        ;     1: Not pressed
-                                       
+
+.alias JOYPAD2               $4017     ; Joypad 2 Data [R]
+                                       ; Bits: ---- ---D
+                                       ;   D = Input data bit
+                                       ; Notes:
+                                       ;   Read once for each button.
+                                       ;   Buttons in this order:
+                                       ;     A, B, Select, Start, Up, Down, Left, Right
+                                       ;     0: Pressed
+                                       ;     1: Not pressed
+
 ; -------------------------------------------------------------------------------------------------
 ; PPU Memory Map (PPU RAM Addresses)
 ; -------------------------------------------------------------------------------------------------
@@ -246,23 +246,24 @@
 ; ==================================================================
 ; ===== WARNING! WARNING! WARNING! WARNING! WARNING! WARNING!  =====
 ; =====                                                        =====
-; ===== Use these as reminders of what the addresses are ONLY! =====
+; ===== Use these as reminders of what the addresses are and   =====
+; =====          how things work within the PPU ONLY!          =====
 ; =====    They CANNOT be used by normal CPU instructions!     =====
 ; =====                                                        =====
 ; ===== WARNING! WARNING! WARNING! WARNING! WARNING! WARNING!  =====
 ; ==================================================================
 ;
 ; Definitions of mirroring for Name Tables
-;   - Vertical mirroring means that the same data is visible in vertically 
-;     aligned name tables.  In other words, $2000 and $2800 are mirrored, 
-;     and $2400 and $2C00 are mirrored.  Vertical mirroring is generally 
+;   - Vertical mirroring means that the same data is visible in vertically
+;     aligned name tables.  In other words, $2000 and $2800 are mirrored,
+;     and $2400 and $2C00 are mirrored.  Vertical mirroring is generally
 ;     used for horizontal scrolling.
 ;   - Horizontal mirroring means that the same data is visible in horizontally
-;     aligned name tables.  In other words, $2000 and $2400 are mirrored, 
-;     and $2800 and $2C00 are mirrored.  Horizontal mirroring is generally 
+;     aligned name tables.  In other words, $2000 and $2400 are mirrored,
+;     and $2800 and $2C00 are mirrored.  Horizontal mirroring is generally
 ;     used for vertical scrolling.
-; Scroll values for both X and Y are 9-bit values (0-511) and are set by 
-; writing to PPU_SCROLL for the first 8-bits and then bits 0 and 1 in 
+; Scroll values for both X and Y are 9-bit values (0-511) and are set by
+; writing to PPU_SCROLL for the first 8-bits and then bits 0 and 1 in
 ; PPU_CONTROL make the 9th bit for each value.
 ;
 ;        (0,0)     (256,0)     (511,0)
@@ -281,19 +282,46 @@
 ;          +-----------+-----------+
 ;        (0,479)   (256,479)   (511,479)
 
+; Pattern Tables are 4096 bytes each - 256 tiles of 16 bytes per tile
 .alias PATTERN_TABLE0        $0000     ; Pattern Table 0
 .alias PATTERN_TABLE1        $1000     ; Pattern Table 1
-.alias NAME_TABLE0           $2000     ; Upper-Left Name Table
-.alias NAME_TABLE1           $2400     ; Upper-Right Name Table
-.alias NAME_TABLE2           $2800     ; Lower-Left Name Table
-.alias NAME_TABLE3           $2C00     ; Lower-Right Name Table
-.alias ATTRIB_TABLE0         $23C0     ; Upper-Left Attribute Table
-.alias ATTRIB_TABLE1         $27C0     ; Upper-Right Attribute Table
-.alias ATTRIB_TABLE2         $2BC0     ; Lower-Left Attribute Table
-.alias ATTRIB_TABLE3         $2FC0     ; Lower-Right Attribute Table
 
-; Palette Whole Values
-.alias PAL_BG_COLOR          $3F00     ; Universal background color
+; Name Tables contain an associated attribute table.
+; - 960 bytes for the name table
+; - 64 bytes for the associated attribute table
+; - 1024 bytes total
+.alias NAME_TABLE0           $2000     ; 960-bytes Upper-Left Name Table
+.alias NAME_TABLE1           $2400     ; 960-bytes Upper-Right Name Table
+.alias NAME_TABLE2           $2800     ; 960-bytes Lower-Left Name Table
+.alias NAME_TABLE3           $2C00     ; 960-bytes Lower-Right Name Table
+.alias ATTRIB_TABLE0         $23C0     ; 64-bytes Upper-Left Attribute Table
+.alias ATTRIB_TABLE1         $27C0     ; 64-bytes Upper-Right Attribute Table
+.alias ATTRIB_TABLE2         $2BC0     ; 64-bytes Lower-Left Attribute Table
+.alias ATTRIB_TABLE3         $2FC0     ; 64-bytes Lower-Right Attribute Table
+
+; Palette Addresses in PPU Memory
+; The palettes look like 32 total bytes, but there is some funky mirroring
+; going on.  In the list below, there are * next to shared colors to make it 
+; more clear how the entries are shared.  Each byte with a * is actually the 
+; same byte of memory.  In practice this doesn't actually affect anything 
+; because entry 0 of each sprite subpalette is used to represent transparency 
+; and is never drawn. Sub-palettes are shown grouped together in square 
+; brackets and are prefixed with the binary palette number used for sprites 
+; and attribute tables.
+;
+; Background Palettes 
+; 00 [00*  01   02   03]
+; 01 [04   05   06   07]  
+; 10 [08   09   0A   0B]   
+; 11 [0C   0D   0E   0F]
+;
+; Sprite Palettes
+; 00 [10*  11   12   13]
+; 01 [14*  15   16   17]
+; 10 [18*  19   1A   1B]
+; 11 [1C*  1D   1E   1F]
+
+.alias PAL_BG_COLOR          $3F00     ; 1-byte Universal background color
 .alias PAL_ALL_BG            $3F00     ; 16-byte All Background Palettes
 .alias PAL_BG0               $3F01     ; 3-byte Background Palette 0
 .alias PAL_BG1               $3F05     ; 3-byte Background Palette 1
