@@ -248,16 +248,19 @@
 ; -------------------------------------------------------------------------------------------------
 ; PPU Memory Map (PPU RAM Addresses)
 ; -------------------------------------------------------------------------------------------------
+;  
+; =====================================================================
+;  Syntax Notes - How to use these
+; =====================================================================
+;  These are PPU RAM addresses, which means in general that they 
+;  should be loaded as immediate values.  The syntax for that to 
+;  work correctly is as follows:
 ;
-; ==================================================================
-; ===== WARNING! WARNING! WARNING! WARNING! WARNING! WARNING!  =====
-; =====                                                        =====
-; ===== Use these as reminders of what the addresses are and   =====
-; =====          how things work within the PPU ONLY!          =====
-; =====    They CANNOT be used by normal CPU instructions!     =====
-; =====                                                        =====
-; ===== WARNING! WARNING! WARNING! WARNING! WARNING! WARNING!  =====
-; ==================================================================
+;    lda #[>NAME_TABLE0]
+;    sta PPU_ADDR
+;    lda #[<NAME_TABLE0]
+;    sta PPU_ADDR
+; =====================================================================
 ;
 ; Definitions of mirroring for Name Tables
 ;   - Vertical mirroring means that the same data is visible in vertically
@@ -328,6 +331,7 @@
 ; 11 [1C*  1D   1E   1F]
 
 .alias PAL_BG_COLOR          $3F00     ; 1-byte Universal background color
+.alias PAL_ALL               $3F00     ; 32-byte All Palettes
 .alias PAL_ALL_BG            $3F00     ; 16-byte All Background Palettes
 .alias PAL_BG0               $3F01     ; 3-byte Background Palette 0
 .alias PAL_BG1               $3F05     ; 3-byte Background Palette 1
