@@ -32,15 +32,21 @@
                                        ;   V = NMI enable
                                        ;   P = PPU master/slave
                                        ;   H = Sprite height
+                                       ;     0: 8x8 / 1: 8x16
                                        ;   B = Background pattern table select
+                                       ;     0: $0000 / 1: $1000
                                        ;   S = Sprite pattern table select
+                                       ;     0: $0000 / 1: $1000
                                        ;   I = Increment mode
+                                       ;     0: auto-increments writes to PPU_DATA by 1  (horizontal writes)
+                                       ;     1: auto-increments writes to PPU_DATA by 32 (vertical writes)
                                        ;   N = Nametable select
+                                       ;     00: $2000 / 01: $2400 / 10: $2800 / 11: $2C00
                                        ; Note: N is effectively the 9th (high) bit
                                        ;   of the PPUSCROLL value.
 
 .alias PPU_MASK              $2001     ; PPU Mask [W]
-                                       ; Bits: BGRs bCcG
+                                       ; Bits: BGRs bCcg
                                        ;   B = Blue color emphasis
                                        ;   G = Green color emphasis
                                        ;   R = Red color emphasis
@@ -48,7 +54,7 @@
                                        ;   b = Background enabled
                                        ;   C = Sprite left column enable
                                        ;   c = Background left column enable
-                                       ;   G = Greyscale mode
+                                       ;   g = Greyscale mode
 
 .alias PPU_STATUS            $2002     ; PPU Status [R]
                                        ; Bits: VSO- ----
